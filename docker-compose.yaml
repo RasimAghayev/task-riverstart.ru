@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  task_db:
+    container_name: task_db
+    image: mysql:8.0
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=task
+      - MYSQL_PASSWORD=root
+    ports:
+      - "33063:3306"
+  task_app:
+    container_name: task_app
+    depends_on:
+      - task_db
+    build: .
+    entrypoint: /usr/local/bin/docker-php-entrypoint-dev
+    volumes:
+      - .:/var/www
+    command: ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+    environment:
+      - APP_ENV=local
+      - APP_KEY=base64:tLmYfUrrZITzLIkSjFnV+PCAFxkdU+duUxjVSIlrrHo=
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=127.0.0.1
+      - DB_PORT=33063
+      - DB_DATABASE=task
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    restart: unless-stopped
+    ports:
+      - 8000:80
+volumes:
+  task_db-data:
