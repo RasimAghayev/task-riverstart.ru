@@ -2,17 +2,28 @@
 
 namespace App\Models\API;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class Category extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'slug', 'description','parent_id'
+        'name', 'slug', 'description','parent_id','user_id'
     ];
+
     protected $parentColumn = 'parent_id';
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function parent()
     {
@@ -38,10 +49,9 @@ class Category extends Model
     {
         parent::boot();
 
-        static::created(function ($category) {
-
+        static::created(callback: function ($category) {
+            $category->user_id=Auth::id();
             $category->slug = $category->createSlug($category->name);
-
             $category->save();
         });
     }

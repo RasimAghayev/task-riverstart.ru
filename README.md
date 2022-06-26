@@ -7,6 +7,14 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Firstly running command
+```shell
+php artisan migrate
+php artisan passport:client --force
+```
+
+
+
 ## About Project
 
 ## About Laravel

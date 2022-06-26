@@ -18,10 +18,12 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $categories = Category::all();
+        if(Category::count()>0) {
+            $categories = Category::all();
 
-        return $this->sendResponse(CategoryResource::collection($categories), 'Categories Retrieved Successfully.');
-
+            return $this->sendResponse(CategoryResource::collection($categories), 'Categories Retrieved Successfully.');
+        }
+        return $this->sendResponse([], 'Empty data.');
     }
 
     /**
@@ -50,7 +52,6 @@ class CategoryController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
-
         $category = Category::create($input);
 
         return $this->sendResponse(new CategoryResource($category), 'Category Created Successfully.');
