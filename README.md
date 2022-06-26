@@ -8,8 +8,11 @@
 </p>
 
 ## Firstly running command
+https://documenter.getpostman.com/view/1965733/UzBsHQ2T
+
 ```shell
 php artisan migrate
+php artisan passport:install
 php artisan passport:client --force
 ```
 

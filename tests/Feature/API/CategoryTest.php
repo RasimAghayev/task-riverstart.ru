@@ -29,19 +29,39 @@ class CategoryTest extends TestCase
     }
 
     /**
-     * test create product.
+     * test create category.
      *
      * @return void
      */
-    public function test_create_create()
+    public function test_create_category()
     {
         $token = $this->authenticate();
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,
         ])->json('POST','api/v1/category',[
             'name' => 'Test category',
-            'name' => 'Test category',
-        ]);
+            'description' => 'Test category',
+            'parent_id' => 1,
+        ])->assertStatus(200);
+        //Write the response in laravel.log
+        \Log::info(1, [$response->getContent()]);
+        return $response->getContent();
+//        $response->assertStatus(200);
+    }
+
+    /**
+     * test find category.
+     *
+     * @return void
+     */
+    public function test_list_category()
+    {
+        $token = $this->authenticate();
+        $id = $this->test_create_category();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->json('GET','api/v1/category');
+
         //Write the response in laravel.log
         \Log::info(1, [$response->getContent()]);
 
@@ -49,17 +69,59 @@ class CategoryTest extends TestCase
     }
 
     /**
-     * test find hash.
+     * test find category.
      *
      * @return void
      */
-    public function test_find_hash()
+    public function test_find_category()
     {
         $token = $this->authenticate();
-        $hash = $this->test_create_hash()->hash;
+        $id = (array) json_decode($this->test_create_category());
+        $id=(int) $id['data']->id;
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,
-        ])->json('GET','api/hash/{$hash}');
+        ])->json('GET','api/v1/category/{$id}');
+
+        //Write the response in laravel.log
+        \Log::info(1, [$response->getContent()]);
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * test find category.
+     *
+     * @return void
+     */
+    public function test_update_category()
+    {
+        $token = $this->authenticate();
+        $id = $this->test_create_category()->data->id;
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->json('PUT','api/v1/category/{$id}',[
+            'name' => 'Test category 2',
+            'description' => 'Test category 2',
+            'parent_id' => 2,
+        ]);
+
+        //Write the response in laravel.log
+        \Log::info(1, [$response->getContent()]);
+
+        $response->assertStatus(200);
+    }
+    /**
+     * test delte category.
+     *
+     * @return void
+     */
+    public function test_delete_category()
+    {
+        $token = $this->authenticate();
+        $id = $this->test_create_category()->id;
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->json('DELETE','api/v1/category/{$id}');
 
         //Write the response in laravel.log
         \Log::info(1, [$response->getContent()]);

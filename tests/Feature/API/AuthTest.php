@@ -35,12 +35,12 @@ class AuthTest extends TestCase
     public function testLogin()
     {
         $email = time().'@example.com';
-        $password = bcrypt('123456789');
+        $password = '123456789';
         User::create([
             'name' => 'Test',
             'email'=> $email,
-            'password' => $password,
-            'c_password' => $password
+            'password' => bcrypt($password),
+            'c_password' => bcrypt($password)
         ]);
         $response = $this->json('POST','api/login',[
             'email' => $email,
@@ -50,7 +50,7 @@ class AuthTest extends TestCase
         //Write the response in laravel.log
         \Log::info(1, [$response->getContent()]);
 //        dd([$email,$password,$response]);
-        $response->assertStatus(404);
+        $response->assertStatus(200);
 
         User::where('email',$email)->delete();
     }

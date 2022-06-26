@@ -61,7 +61,7 @@ class Category extends Model
      *
      * @return response()
      */
-    private function createSlug($name)
+    private function createSlug($name): response|string
     {
         if (static::whereSlug($slug = Str::slug($name))->exists()) {
 
