@@ -3,7 +3,7 @@ version: "3.8"
 services:
   task_db:
     container_name: task_db
-    image: mysql:8.0
+    image: mysql:8.2
     volumes:
       - ./storage/dbdata:/var/lib/mysql
     environment:
